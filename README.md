@@ -42,7 +42,9 @@ format，文件(路径)格式，默认为空，自定义文件路径及文件名
 - {s} 秒，2位
 - {ms} 毫秒，3位(**v1.0.4**)
 - {timestamp} 时间戳(秒)，10位(**v1.0.4**)
-- {hash}，文件的md5值，32位
+- {md5:&lt;length&gt;}，文件的 md5 值，<length>表示长度，最短 8 位，默认为 32 位
+- {hash:&lt;length&gt;}，同 md5
+- {sha1:&lt;length&gt;}，文件的 sha1 值，<length>表示长度，最短 8 位，默认为 40 位
 - {origin}，文件原名（会去掉后缀）
 - {rand:&lt;count&gt;}, 随机数，&lt;count&gt;表示个数，默认为6个，示例：{rand：32}、{rand}
 - {localFolder:&lt;count&gt;}, &lt;count&gt;表示层级 ，默认为1，示例：{localFolder:6}、{localFolder}

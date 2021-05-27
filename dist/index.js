@@ -71,18 +71,26 @@ module.exports = (ctx) => {
                                 return crypto.randomBytes(Math.ceil(count / 2)).toString('hex').slice(0, count);
                             }
                         })
+                            // 文件 hash 值，可选 md5 或 sha1 算法，默认 md5，可以设置长度
+                            .replace(/{((md5|sha1|hash):?(\d+)?)}/gi, (result, str, key, length) => {
+                            let algorithm = 'md5';
+                            if (['hash', 'md5'].includes(key)) {
+                                length = Math.max(8, (length || 32));
+                            }
+                            if (key === 'sha1') {
+                                length = Math.max(8, (length || 40));
+                                algorithm = 'sha1';
+                            }
+                            const hash = crypto.createHash(algorithm);
+                            hash.update(item.buffer);
+                            return hash.digest('hex').slice(0, length);
+                        })
                             // 字符串替换
-                            .replace(/{(hash|origin|\w+)}/gi, (result, key) => {
+                            .replace(/{(origin|\w+)}/gi, (result, key) => {
                             // 文件原名
                             if (key === 'origin') {
                                 return fileName.substring(0, Math.max(0, fileName.lastIndexOf('.')) || fileName.length)
                                     .replace(/[\\\/:<>|"'*?$#&@()\[\]^~]+/g, '-');
-                            }
-                            // 文件hash值
-                            if (key === 'hash') {
-                                const hash = crypto.createHash('md5');
-                                hash.update(item.buffer);
-                                return hash.digest('hex');
                             }
                             return key;
                         })
